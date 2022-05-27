@@ -30,13 +30,7 @@ class BookDetailsView extends ConsumerWidget {
                   maxLines: 1,
                 ),
               ),
-              background: Hero(
-                tag: 'Book-${book.id}',
-                child: Image.network(
-                  book.thumbnail,
-                  fit: BoxFit.cover,
-                ),
-              ),
+              background: Image.network(book.thumbnail, fit: BoxFit.cover),
             ),
           ),
           SliverPadding(

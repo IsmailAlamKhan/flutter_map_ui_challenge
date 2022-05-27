@@ -1,3 +1,4 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:sliver_tools/sliver_tools.dart';
@@ -6,33 +7,29 @@ import '../../../shared/models/book.dart';
 import '../../book_details/view/book_details_view.dart';
 
 class HomeViewBooks extends StatelessWidget {
-  const HomeViewBooks(this.data, {super.key});
+  const HomeViewBooks({
+    super.key,
+    required this.data,
+    required this.isSmallDevice,
+  });
   final List<Book> data;
+  final bool isSmallDevice;
   @override
   Widget build(BuildContext context) {
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final isSmallDevice = constraints.maxWidth < 600;
-        return CustomScrollView(
-          slivers: [
-            SliverCrossAxisConstrained(
-              maxCrossAxisExtent: 800,
-              child: SliverGrid(
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: isSmallDevice ? 2 : 4,
-                ),
-                delegate: SliverChildBuilderDelegate(
-                  (_, index) {
-                    final book = data[index];
-                    return HomeViewBookItem(book: book);
-                  },
-                  childCount: data.length,
-                ),
-              ),
-            ),
-          ],
-        );
-      },
+    return SliverCrossAxisConstrained(
+      maxCrossAxisExtent: 800,
+      child: SliverGrid(
+        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+          crossAxisCount: isSmallDevice ? 2 : 4,
+        ),
+        delegate: SliverChildBuilderDelegate(
+          (_, index) {
+            final book = data[index];
+            return HomeViewBookItem(book: book);
+          },
+          childCount: data.length,
+        ),
+      ),
     );
   }
 }
@@ -46,15 +43,13 @@ class HomeViewBookItem extends HookWidget {
   Widget build(BuildContext context) {
     return SizedBox(
       height: 250,
-      child: Hero(
-        tag: 'Book-${book.id}',
-        child: Card(
+      child: OpenContainer(
+        closedColor: Colors.transparent,
+        transitionDuration: const Duration(milliseconds: 500),
+        openBuilder: (_, __) => BookDetailsView(book: book),
+        closedBuilder: (_, open) => Card(
           child: InkWell(
-            onTap: () {
-              Navigator.of(context).push(
-                MaterialPageRoute(builder: (_) => BookDetailsView(book: book)),
-              );
-            },
+            onTap: open,
             child: Padding(
               padding: const EdgeInsets.all(8.0),
               child: Column(

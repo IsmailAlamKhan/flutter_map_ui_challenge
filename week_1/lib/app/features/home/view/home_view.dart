@@ -11,13 +11,28 @@ class HomeView extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final booksData = ref.watch(booksProvider);
-    return Scaffold(
-      appBar: AppBar(title: const Text('Books')),
-      body: booksData.when(
-        data: HomeViewBooks.new,
-        error: (error, stackTrace) => HomeViewError(error: error),
-        loading: () => const Center(child: CircularProgressIndicator()),
-      ),
-    );
+    return LayoutBuilder(builder: (context, constraints) {
+      final isSmallDevice = constraints.maxWidth < 600;
+      return Scaffold(
+        body: CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              title: const Text('Books'),
+              floating: isSmallDevice,
+              pinned: !isSmallDevice,
+            ),
+            booksData.when(
+              data: (data) => HomeViewBooks(data: data, isSmallDevice: isSmallDevice),
+              error: (error, stackTrace) => SliverFillRemaining(
+                child: HomeViewError(error: error),
+              ),
+              loading: () => const SliverFillRemaining(
+                child: Center(child: CircularProgressIndicator()),
+              ),
+            ),
+          ],
+        ),
+      );
+    });
   }
 }
