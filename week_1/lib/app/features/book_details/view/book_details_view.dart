@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:url_launcher/link.dart';
+import 'package:utils/utils.dart';
 
 import '../../../shared/models/book.dart';
-import '../../../shared/widgets/widgets.dart';
 
 class BookDetailsView extends ConsumerWidget {
   const BookDetailsView({
@@ -30,7 +30,11 @@ class BookDetailsView extends ConsumerWidget {
                   maxLines: 1,
                 ),
               ),
-              background: Image.network(book.thumbnail, fit: BoxFit.cover),
+              background: Image.network(
+                book.thumbnail,
+                fit: BoxFit.cover,
+                errorBuilder: imageErrorWidgetBuilder,
+              ),
             ),
           ),
           SliverPadding(
@@ -48,18 +52,13 @@ class BookDetailsView extends ConsumerWidget {
                         ),
                         Wrap(
                           spacing: 8,
-                          runSpacing: 8,
-                          children: book.authors!.map((author) {
-                            return Chip(label: Text(author));
-                          }).toList(),
+                          children: book.authors!
+                              .map(
+                                (author) => Chip(label: Text(author)),
+                              )
+                              .toList(),
                         ),
                       ],
-                    ),
-                  const SizedBox(height: 8),
-                  if (book.description != null)
-                    SelectableText(
-                      book.description!,
-                      style: Theme.of(context).textTheme.bodySmall,
                     ),
                   const SizedBox(height: 8),
                   Align(
@@ -77,6 +76,12 @@ class BookDetailsView extends ConsumerWidget {
                       },
                     ),
                   ),
+                  const SizedBox(height: 8),
+                  if (book.description != null)
+                    SelectableText(
+                      book.description!,
+                      style: Theme.of(context).textTheme.bodySmall,
+                    ),
                 ],
               ),
             ),

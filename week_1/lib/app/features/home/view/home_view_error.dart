@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:utils/utils.dart';
 
 import '../../../shared/providers.dart';
-import '../../../shared/widgets/widgets.dart';
 
 class HomeViewError extends ConsumerWidget {
   const HomeViewError({super.key, required this.error});
