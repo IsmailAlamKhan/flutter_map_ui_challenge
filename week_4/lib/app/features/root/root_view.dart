@@ -19,6 +19,8 @@ class RootView extends HookWidget {
   Widget build(BuildContext context) {
     final currentIndex = useState(this.currentIndex);
 
+    final currentRoute = tabs[currentIndex.value];
+
     useEffect(() {
       currentIndex.value = this.currentIndex;
     }, [this.currentIndex]);
@@ -40,18 +42,23 @@ class RootView extends HookWidget {
       child: this.child,
     );
     if (isSmallScreen(context)) {
-      return RootViewMobile(
+      child = RootViewMobile(
         currentIndex: currentIndex.value,
         onTabChanged: onTap,
         child: child,
       );
     } else {
-      return RootViewDesktopAndTab(
+      child = RootViewDesktopAndTab(
         currentIndex: currentIndex.value,
         onTabChanged: onTap,
         child: child,
       );
     }
+    return Title(
+      color: Colors.white,
+      title: 'Adaptive Navigation | ${currentRoute.label}',
+      child: child,
+    );
   }
 }
 
@@ -110,7 +117,7 @@ class RootViewDesktopAndTab extends StatelessWidget {
             selectedIndex: currentIndex,
             onDestinationSelected: onTabChanged,
           ),
-          const VerticalDivider(),
+          const VerticalDivider(width: 0),
           Expanded(child: child)
         ],
       ),

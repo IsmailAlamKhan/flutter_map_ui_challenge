@@ -13,7 +13,7 @@ class AdaptiveNavigationApp extends ConsumerWidget {
     final router = ref.read(routerProvider);
     return AppBuilder(builder: (lightTheme, darkTheme) {
       return MaterialApp.router(
-        title: 'Flutter Demo',
+        title: 'Adaptive Navigation',
         theme: lightTheme,
         darkTheme: darkTheme,
         routeInformationParser: router.routeInformationParser,
